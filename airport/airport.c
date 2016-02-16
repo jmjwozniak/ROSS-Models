@@ -1,5 +1,7 @@
 #include "airport.h"
 
+#include <inttypes.h>
+
 /*
   airport.c
   Airport simulator
@@ -160,7 +162,7 @@ tw_lptype airport_lps[] =
 {
 	{
 		(init_f) init,
-        (pre_run_f) NULL,
+		(pre_run_f) NULL,
 		(event_f) event_handler,
 		(revent_f) rc_event_handler,
 		(final_f) final,
@@ -173,7 +175,7 @@ tw_lptype airport_lps[] =
 const tw_optdef app_opt [] =
 {
 	TWOPT_GROUP("Airport Model"),
-    TWOPT_STIME("lookahead", lookahead, "lookahead for events"),
+	TWOPT_STIME("lookahead", lookahead, "lookahead for events"),
 	//TWOPT_UINT("nairports", nlp_per_pe, "initial # of airports(LPs)"),
 	TWOPT_UINT("nplanes", planes_per_airport, "initial # of planes per airport(events)"),
 	TWOPT_STIME("mean", mean_flight_time, "mean flight time for planes"),
@@ -190,9 +192,10 @@ main(int argc, char **argv, char **env)
 	tw_init(&argc, &argv);
 
 	nlp_per_pe /= (tw_nnodes() * g_tw_npe);
-	g_tw_events_per_pe =(planes_per_airport * nlp_per_pe / g_tw_npe) + opt_mem;
 
-    g_tw_lookahead = lookahead;
+	g_tw_events_per_pe = (planes_per_airport * nlp_per_pe / g_tw_npe) + opt_mem;
+
+	g_tw_lookahead = lookahead;
 
 	tw_define_lps(nlp_per_pe, sizeof(airport_message));
 
@@ -205,13 +208,13 @@ main(int argc, char **argv, char **env)
 	{
 		printf("\nAirport Model Statistics:\n");
 		printf("\t%-50s %11.4lf\n", "Average Waiting Time", wait_time_avg);
-		printf("\t%-50s %11lld\n", "Number of airports", 
+		printf("\t%-50s %11"PRId64"\n", "Number of airports",
 			nlp_per_pe * g_tw_npe * tw_nnodes());
-		printf("\t%-50s %11lld\n", "Number of planes", 
+		printf("\t%-50s %11"PRId64"\n", "Number of planes",
 			planes_per_airport * nlp_per_pe * g_tw_npe * tw_nnodes());
 	}
 
 	tw_end();
-	
+
 	return 0;
 }
