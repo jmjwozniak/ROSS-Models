@@ -83,6 +83,8 @@ rc_event_handler(struct game_state * s, tw_bf * bf, void * msg, tw_lp * lp)
 {
   s->catches--;
   tw_rand_reverse_unif(lp->rng);
+  tw_rand_reverse_unif(lp->rng);
+  tw_rand_reverse_unif(lp->rng);
 }
 
 static void
